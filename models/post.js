@@ -45,8 +45,9 @@ const getPostsUser = async () => {
         JOIN users u ON p.userId = u.id
       `)
         connection.release()
-
-        const formattedPosts = rows.map(formatPostRow)
+        
+        const formattedPostsPromises = rows.map(formatPostRow)
+        const formattedPosts = await Promise.all(formattedPostsPromises)
         return formattedPosts
     } catch (error) {
         throw new Error('Error fetching posts: ' + error.message)
@@ -65,8 +66,9 @@ const getPostsById = async (postid) => {
       `, [postid])
         connection.release()
 
-        const formattedPost = rows.map(formatPostRow)[0] || null;
-        return formattedPost;
+        const formattedPostPromise = rows.map(formatPostRow)
+        const formattedPosts = await Promise.all(formattedPostPromise)
+        return formattedPosts
     } catch (error) {
         throw new Error('Error fetching posts: ' + error.message);
     }
