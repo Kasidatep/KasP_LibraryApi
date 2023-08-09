@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const convertDate = require('../plugin/convertDate')
 
 const getPosts = async () => {
     try {
@@ -62,7 +63,7 @@ const getPostsById = async (postid) => {
         SELECT p.*, u.*, p.id as pid, u.id as uid
         FROM posts p
         JOIN users u ON p.userId = u.id
-        WHERE p.id = ?
+        WHERE p.id LIKE ?
       `, [postid])
         connection.release()
 
@@ -74,7 +75,7 @@ const getPostsById = async (postid) => {
     }
 }
 
-const createPost = async(newPost) => {
+const createPost = async (newPost) => {
     try {
         const connection = await db.getConnection()
 
@@ -89,16 +90,21 @@ const createPost = async(newPost) => {
             newPost.img,
             newPost.visible,
             newPost.userId,
-            newPost.postDate,
+            convertDate.convertToMySQLDatetime(newPost.postDate),
         ]
 
-        const [result] = await connection.execute(query, values)
+        console.log(values)
+        console.log("A1")
+        const result = await connection.query(query,values)
+        console.log("A2") 
         connection.release()
         return { message: 'Post created successfully', postId: result.insertId }
     } catch(error) {
-        throw new Error('Error creating post: ' + error.message)
+        console.error(error);
+        return { message: 'Post cannot be created.', error: error.message }
     }
 }
+
 
 
 module.exports = {

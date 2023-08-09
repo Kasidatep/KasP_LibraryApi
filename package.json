@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "startauto": "nodemon app.js"
+    "watch": "nodemon --ext js,pug --ignore public"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

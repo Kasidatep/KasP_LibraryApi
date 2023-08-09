@@ -58,7 +58,7 @@ router.post('/posts', (req, res) => {
     };
 
     const result = postModel.createPost(newPost); // Assuming you have a createPost function in your model
-    res.status(201).json(result); // Respond with the created post
+    res.status(200).json(result); // Respond with the created post
   } catch (error) {
     console.error('Error creating post:', error);
     res.status(500).json({ error: 'An error occurred while creating the post.' });
